@@ -6,13 +6,15 @@ var right;
 var up;
 var down;
 var one;
-var val;
+var val;	
 var time;
 var money;
 var m;
 var omg;
 var m2;
+//上面宣告要用到的參數
 
+//
 function getElement(dom) {
   var element = document.querySelector(dom);
   return element;
@@ -36,8 +38,10 @@ function controllerBtnEvent(c,e,callback) {
       });
   }
 }
+//
 
 
+//
 boardReady('3P0k', function (board) {
   board.systemReset();
   board.samplingInterval = 250;
@@ -47,28 +51,38 @@ boardReady('3P0k', function (board) {
   right = getPin({ transport: 'mqtt', device: '3P0k' }, 6);
   up = getPin({ transport: 'mqtt', device: '3P0k' }, 7);
   down = getPin({ transport: 'mqtt', device: '3P0k' }, 8);
-  val = 1;
-  time = 1;
-  m=1000;
-  one = new Firebase("https://fuck-c33bc.firebaseio.com/");
+//設定馬達驅動時所用的腳位控制
+
+  val = 1;   //用來放計數器
+  time = 1;  //避免清除資料時計數器消失
+  m=1000; //起始金錢
+  one = new Firebase("https://fuck-c33bc.firebaseio.com/"); //取得Firebase連接
   
   one.on("value", function(snapshot) {
      data = snapshot.val().次數;
   });
   
+  //把data設為firebase裡的val值 取出Firebase裡娃娃機使用次數
+  
   one.on("value", function(snapshot) {
      data2 = snapshot.m().money;
   });
   
-  rfid = getRFID(board);
-  rfid.read();
+  //取Firebase裡金錢剩餘值
+  
+  rfid = getRFID(board);  //啟動RFID板
+  rfid.read();    //讀取RFID
   rfid.on("enter",function(_uid){
     rfid._uid = _uid;
     document.getElementById("demo-area-01-show").innerHTML = rfid._uid;
+    
+//顯示RFID卡帳號
+
     val = val + 1;
-    document.getElementById("Q").innerHTML = val;
+    document.getElementById("Q").innerHTML = val;//設定次數ID給HTML
     m=m-10;
-    document.getElementById("D").innerHTML = m;
+    document.getElementById("D").innerHTML = m; //設定金錢ID給HTML
+
     one.update({
       QQ:{  次數:val,
       WW:time,
@@ -77,6 +91,9 @@ boardReady('3P0k', function (board) {
     },
     });
   });
+  
+//上傳次數給RFID
+
   one.on("value", function(snapshot) {
     time=[];
     snapshot.forEach(function(data) {
@@ -85,6 +102,8 @@ boardReady('3P0k', function (board) {
         val = time;
       }
     });
+    
+//將Firebase值取出
     
     one.on("value", function(snapshot) {
     m2=[];
@@ -95,12 +114,17 @@ boardReady('3P0k', function (board) {
       }
     });
     
+    //將金錢值取出
+    
    });
    }, function (errorObject) {
      console.log("The read failed: " + errorObject.code);
   });
   
   rfid.read();
+  
+  //如果讀到RFID
+  
 rfid.on("enter",function(_uid){
   controllerBtnEvent(getElement("#demo-area-09 .btn-up"),["mousedown","touchstart"], function(){
     front.write(1);
@@ -154,4 +178,4 @@ rfid.on("enter",function(_uid){
 });
 
 });
-
+//上面長串為控制馬達驅動板的輸出與接地
