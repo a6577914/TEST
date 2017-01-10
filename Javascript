@@ -68,7 +68,7 @@ boardReady('3P0k', function (board) {
      data2 = snapshot.m().money;
   });
   
-  //取Firebase裡金錢剩餘值
+ //取firebase裡金前剩餘值, 但是這段有錯誤 沒辦法正確存取
   
   rfid = getRFID(board);  //啟動RFID板
   rfid.read();    //讀取RFID
@@ -113,8 +113,8 @@ boardReady('3P0k', function (board) {
         m=m2;
       }
     });
-    
-    //將金錢值取出
+    //原先預計將金錢值取出,但是失敗了
+   
     
    });
    }, function (errorObject) {
@@ -123,59 +123,63 @@ boardReady('3P0k', function (board) {
   
   rfid.read();
   
-  //如果讀到RFID
+//如果讀到RFID 才能進行夾子的控制
   
 rfid.on("enter",function(_uid){
-  controllerBtnEvent(getElement("#demo-area-09 .btn-up"),["mousedown","touchstart"], function(){
+
+ controllerBtnEvent(getElement("#demo-area-09 .btn-up"),["mousedown","touchstart"], function(){
     front.write(1);
-    back2.write(0);
-  });
+    back2.write(0);	
+  }); //這是用來操作夾子 前進的front.write
+
   controllerBtnEvent(getElement("#demo-area-09 .btn-up"),["mouseup","touchend"], function(){
     front.write(0);
     back2.write(0);
-  });
-  controllerBtnEvent(getElement("#demo-area-09 .btn-down"),["mousedown","touchstart"], function(){
+  }); //放開後操作夾子停止 front.write
+controllerBtnEvent(getElement("#demo-area-09 .btn-down"),["mousedown","touchstart"], function(){
     front.write(0);
     back2.write(1);
-  });
-  controllerBtnEvent(getElement("#demo-area-09 .btn-down"),["mouseup","touchend"], function(){
+  });  //這是用來操作夾子後退的back2.write
+controllerBtnEvent(getElement("#demo-area-09 .btn-down"),["mouseup","touchend"], function(){
     front.write(0);
     back2.write(0);
-  });
-  controllerBtnEvent(getElement("#demo-area-09 .btn-left"),["mousedown","touchstart"], function(){
+  });    //放開後停止操作夾子 後退的back2.write
+controllerBtnEvent(getElement("#demo-area-09 .btn-left"),["mousedown","touchstart"], function(){
     left.write(1);
     right.write(0);
-  });
-  controllerBtnEvent(getElement("#demo-area-09 .btn-left"),["mouseup","touchend"], function(){
+  });   //這是用來操作夾子 左移的left.write(1);
+controllerBtnEvent(getElement("#demo-area-09 .btn-left"),["mouseup","touchend"], function(){
     left.write(0);
     right.write(0);
-  });
-  controllerBtnEvent(getElement("#demo-area-09 .btn-right"),["mousedown","touchstart"], function(){
+  }); //放開後停止操作夾子left.write; controllerBtnEvent(getElement("#demo-area-09 .btn-right"),["mousedown","touchstart"], function(){
     right.write(1);
     left.write(0);
-  });
-  controllerBtnEvent(getElement("#demo-area-09 .btn-right"),["mouseup","touchend"], function(){
+  });  //這是用來操作夾子 右移的right.write
+controllerBtnEvent(getElement("#demo-area-09 .btn-right"),["mouseup","touchend"], function(){
     right.write(0);
     left.write(0);
-  });
+  });  //放開後操作夾子停止右移的right.write
   controllerBtnEvent(getElement("#demo-area-09 .btn-pre"),["mousedown","touchstart"], function(){
     up.write(1);
     down.write(0);
-  });
+  });//這是用來操作夾子 抓的up.write
+
   controllerBtnEvent(getElement("#demo-area-09 .btn-pre"),["mouseup","touchend"], function(){
     up.write(0);
     down.write(0);
-  });
+  });  /放開後停止操作夾子 抓的right.write
+
   controllerBtnEvent(getElement("#demo-area-09 .btn-next"),["mousedown","touchstart"], function(){
     down.write(1);
     up.write(0);
-  });
+  });  //這是用來 下降的down.write
   controllerBtnEvent(getElement("#demo-area-09 .btn-next"),["mouseup","touchend"], function(){
     up.write(0);
     down.write(0);
-  });
+  });  //放開後停止操作夾子  下降的down.write
+
  
 });
 
 });
-//上面長串為控制馬達驅動板的輸出與接地
+//上面長串為控制馬達驅動版的輸出與接地
