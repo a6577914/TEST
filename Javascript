@@ -126,7 +126,7 @@ boardReady('3P0k', function (board) {
 //如果讀到RFID 才能進行夾子的控制
   
 rfid.on("enter",function(_uid){
-
+//下面的操作是使用blocky生成的操作介面
  controllerBtnEvent(getElement("#demo-area-09 .btn-up"),["mousedown","touchstart"], function(){
     front.write(1);
     back2.write(0);	
